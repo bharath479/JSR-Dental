@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  jsr-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jsr-dental-frontend:latest
+    ports:
+      - "80:80"
+    restart: always
+    environment:
+      - NODE_ENV=production
+
+  jsr-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: jsr-dental-backend:latest
+    ports:
+      - "5000:5000"
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=<your DB URL>
+    depends_on:
+      - mongo
+
+    mongo:
+      image: mongo:latest
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
